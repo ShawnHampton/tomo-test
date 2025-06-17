@@ -47,12 +47,11 @@ export const BlendList = ({ searchString }: Props) => {
         {filteredBlends.length === 0
           ? 'No blends matching the search criteria'
           : filteredBlends.map((blend) => (
-              <div
-                key={blend.id}
-                className="py-1 hover:bg-gray-800 hover:text-white transition-colors"
-              >
-                <Link to={`/blends/${blend.id}`}>{blend.name}</Link>
-              </div>
+              <Link key={blend.id} to={`/blends/${blend.id}`}>
+                <div className="py-1 hover:bg-gray-800 hover:text-white transition-colors">
+                  {blend.name}
+                </div>
+              </Link>
             ))}
       </div>
     </div>

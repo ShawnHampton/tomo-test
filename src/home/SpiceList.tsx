@@ -46,12 +46,11 @@ export const SpiceList = ({ searchString }: Props) => {
         {filteredSpices.length === 0
           ? 'No spices matching the search criteria'
           : filteredSpices.map((spice) => (
-              <div
-                key={spice.id}
-                className="py-1 hover:bg-gray-800 hover:text-white transition-colors"
-              >
-                <Link to={`/spices/${spice.id}`}>{spice.name}</Link>
-              </div>
+              <Link key={spice.id} to={`/spices/${spice.id}`}>
+                <div className="py-1 hover:bg-gray-800 hover:text-white transition-colors">
+                  {spice.name}
+                </div>
+              </Link>
             ))}
       </div>
     </div>

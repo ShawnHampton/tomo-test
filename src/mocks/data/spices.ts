@@ -3,7 +3,7 @@ export const data = () => [
     id: 0,
     name: 'Adobo Seasoning',
     price: '$',
-    color: '7e7ac',
+    color: '7e7ac1',
     heat: 3,
   },
   {
