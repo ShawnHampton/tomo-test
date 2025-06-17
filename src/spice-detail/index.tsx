@@ -1,12 +1,12 @@
 import { useMemo } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { Header } from '../components/Header';
 import { HeatIcon } from '../components/icons/HeatIcon';
 import { BackArrowIcon } from '../components/icons/BackArrowIcon';
 import { fetchSpiceById } from '../api/spices';
 import tinycolor from 'tinycolor2';
-import clsx from "clsx"; 
+import clsx from "clsx";
+import { PageContainer } from '../components/PageContainer';
 
 const SpiceDetail = () => {
   const { id } = useParams();
@@ -21,35 +21,13 @@ const SpiceDetail = () => {
     return tinycolor(spice?.color || '#000000');
   }, [spice?.color]);
 
-  if (isPending) {
-    return (
-      <div className="flex flex-col h-full">
-        <Header header="Spice Details" />
-        <div className="flex justify-center items-center h-full">
-          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-amber-700"></div>
-        </div>
-      </div>
-    );
-  }
-
-  if (isError) {
-    return (
-      <div className="flex flex-col h-full">
-        <Header header="Spice Details" />
-        <div className="flex-1 flex items-center justify-center">
-          <div className="text-red-500 text-center">
-            Error loading spice. Please try again later.
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // Main content render when data is available
   return (
-    <div className="flex flex-col h-full">
-      <Header header="Spice Details" />
-      
+    <PageContainer 
+      title="Spice Details" 
+      isLoading={isPending} 
+      isError={isError}
+      errorMessage="Error loading spice. Please try again later."
+    >
       <div className="p-6 flex-1 bg-gray-50">
         <Link to="/" className="text-blue-600 hover:text-blue-800 flex items-center mb-6">
           <BackArrowIcon />
@@ -81,7 +59,7 @@ const SpiceDetail = () => {
           </div>
         )}
       </div>
-    </div>
+    </PageContainer>
   );
 };
 

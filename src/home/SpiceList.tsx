@@ -3,6 +3,8 @@ import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { fetchSpices } from '../api/spices';
 import { Header } from '../components/Header';
+import { LoadingState } from '../components/LoadingState';
+import { ErrorState } from '../components/ErrorState';
 
 interface Props {
   searchString: string;
@@ -20,21 +22,12 @@ export const SpiceList = ({ searchString }: Props) => {
       spice.name.toLowerCase().includes(searchString.toLowerCase()),
     );
   }, [data, searchString]);
-
   if (isPending) {
-    return (
-      <div className="flex justify-center items-center h-full">
-        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-amber-700"></div>
-      </div>
-    );
+    return <LoadingState fullHeight={true} />;
   }
 
   if (isError) {
-    return (
-      <div className="text-red-500 text-center">
-        Error loading spices. Please try again later.
-      </div>
-    );
+    return <ErrorState message="Error loading spices. Please try again later." fullHeight={true} />;
   }
 
   return (
