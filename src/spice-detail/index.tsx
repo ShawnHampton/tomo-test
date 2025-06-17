@@ -1,34 +1,21 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import type { Spice } from '../types';
+import { useQuery } from '@tanstack/react-query';
 import { Header } from '../components/Header';
 import { HeatIcon } from '../components/HeatIcon';
 import { BackArrowIcon } from '../components/BackArrowIcon';
+import { fetchSpiceById } from '../api/spices';
 import tinycolor from 'tinycolor2';
 import clsx from "clsx"; 
 
 const SpiceDetail = () => {
   const { id } = useParams();
-  const [spice, setSpice] = useState<Spice>();
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    async function fetchSpice() {
-      setLoading(true)
-      try {
-        const response = await fetch(`/api/v1/spices/${id}`);
-        const spice = await response.json();
-        setSpice(spice);
-      } catch (error) {
-        console.error('Error fetching spice:', error);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchSpice();
-  }, [id]);
-
+  
+  const { data: spice, isLoading, isError } = useQuery({
+    queryKey: ['spices', id],
+    queryFn: () => fetchSpiceById(Number(id)),
+    enabled: !!id, // Only run query if id is available
+  });
   const color = useMemo(() => {
     return tinycolor(spice?.color || '#000000');
   }, [spice?.color])
@@ -37,14 +24,19 @@ const SpiceDetail = () => {
     <div className="flex flex-col h-full">
       <Header header="Spice Details" />
       
-      <div className="p-6 flex-1 bg-gray-50">        <Link to="/" className="text-blue-600 hover:text-blue-800 flex items-center mb-6">
+      <div className="p-6 flex-1 bg-gray-50">
+        <Link to="/" className="text-blue-600 hover:text-blue-800 flex items-center mb-6">
           <BackArrowIcon />
           Back to Spice List
         </Link>
         
-        {loading ? (
+        {isLoading ? (
           <div className="flex justify-center items-center h-32">
-            <div className="animate-spin rounded-full h-10 w-10 border-b-2"></div>
+            <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-amber-700"></div>
+          </div>
+        ) : isError ? (
+          <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-center text-red-700">
+            Error loading spice. Please try again later.
           </div>
         ) : spice ? (
           <div className={clsx("bg-white rounded-lg shadow-md p-6 max-w-xl mx-auto", {"text-gray-800": color.isLight(), "text-gray-200": color.isDark()})} style={{backgroundColor: `#${spice.color}` }}>

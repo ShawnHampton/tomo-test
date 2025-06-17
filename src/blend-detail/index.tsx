@@ -1,40 +1,48 @@
-import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import type { Blend, Spice } from '../types';
+import { useQuery } from '@tanstack/react-query';
+import type { Spice } from '../types';
 import { Header } from '../components/Header';
 import { BackArrowIcon } from '../components/BackArrowIcon';
+import { fetchBlendById } from '../api/blends';
+import { fetchSpiceById } from '../api/spices';
 
 const BlendDetail = () => {
   const { id } = useParams();
-  const [blend, setBlend] = useState<Blend>();
-  const [spices, setSpices] = useState<Spice[]>([]);
-  const [loading, setLoading] = useState(true);
+  
+  // Fetch blend details
+  const { 
+    data: blend, 
+    isLoading: isBlendLoading, 
+    isError: isBlendError 
+  } = useQuery({
+    queryKey: ['blend', id],
+    queryFn: () => fetchBlendById(Number(id)),
+    enabled: !!id, // Only run query if id is available
+  });
 
-  useEffect(() => {
-    async function fetchBlend() {
-      setLoading(true);
-      try {
-        const response = await fetch(`/api/v1/blends/${id}`);
-        const blend = await response.json();
-        setBlend(blend);
-        
-        // Fetch related spices
-        if (blend.spices && blend.spices.length > 0) {
-          const spicePromises = blend.spices.map((spiceId: number) => 
-            fetch(`/api/v1/spices/${spiceId}`).then(res => res.json())
-          );
-          const spiceData = await Promise.all(spicePromises);
-          setSpices(spiceData);
-        }
-      } catch (error) {
-        console.error('Error fetching blend:', error);
-      } finally {
-        setLoading(false);
+  // Fetch related spices only when blend data is available
+  const { 
+    data: spices,
+    isLoading: isSpicesLoading,
+    isError: isSpicesError
+  } = useQuery({
+    queryKey: ['blend-spices', id],
+    queryFn: async () => {
+      if (!blend?.spices || blend.spices.length === 0) {
+        return [];
       }
-    }
 
-    fetchBlend();
-  }, [id]);
+      // Fetch all related spices in parallel
+      const spicePromises = blend.spices.map((spiceId: number) => 
+        fetchSpiceById(spiceId)
+      );
+      return Promise.all(spicePromises);
+    },
+    enabled: !!blend && !!blend.spices && blend.spices.length > 0, // Only run when blend data with spices is available
+  });
+
+  const isLoading = isBlendLoading || isSpicesLoading;
+  const isError = isBlendError || isSpicesError;
 
   return (
     <div className="flex flex-col h-full">
@@ -46,15 +54,19 @@ const BlendDetail = () => {
           Back to Blend List
         </Link>
         
-        {loading ? (
+        {isLoading ? (
           <div className="flex justify-center items-center h-32">
             <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-amber-700"></div>
           </div>
+        ) : isError ? (
+          <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-center text-red-700">
+            Error loading blend. Please try again later.
+          </div>
         ) : blend ? (
-          <div className={`bg-white rounded-lg shadow-md p-6 max-w-xl mx-auto`}>
+          <div className="bg-white rounded-lg shadow-md p-6 max-w-xl mx-auto">
             <h1 className="text-2xl font-bold mb-4 text-amber-800">{blend.name}</h1>
             
-            {blend?.description && (
+            {blend.description && (
               <div className="mb-6">
                 <p className="text-gray-700 italic">{blend.description}</p>
               </div>
@@ -63,9 +75,9 @@ const BlendDetail = () => {
             <div className="space-y-4">
               <div className="pb-2">
                 <h2 className="font-medium text-amber-700 mb-2">Spices in this blend:</h2>
-                {spices.length > 0 ? (
+                {spices && spices.length > 0 ? (
                   <ul className="space-y-2">
-                    {spices.map(spice => (
+                    {spices.map((spice: Spice) => (
                       <li key={spice.id} className="flex items-center">
                         <div className="h-4 w-4 rounded-full mr-2" style={{ backgroundColor: spice.color }}></div>
                         <Link 
@@ -82,7 +94,7 @@ const BlendDetail = () => {
                 )}
               </div>
               
-              {blend?.blends && blend.blends.length > 0 && (
+              {blend.blends && blend.blends.length > 0 && (
                 <div>
                   <h2 className="font-medium text-amber-700 mb-2">Other blends used:</h2>
                   <div className="flex flex-wrap gap-2">
@@ -102,7 +114,7 @@ const BlendDetail = () => {
           </div>
         ) : (
           <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-center text-red-700">
-            Blend not found
+            Blend not found.
           </div>
         )}
       </div>
