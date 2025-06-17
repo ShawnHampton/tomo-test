@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Header } from '../components/Header';
-import { XCircleIcon } from '../components/XCircleIcon';
+import { XCircleIcon } from '../components/icons/XCircleIcon';
 import { BlendList } from './BlendList';
 import { SpiceList } from './SpiceList';
 

@@ -16,11 +16,11 @@ Run `npm install` and then `npm run dev`. This should install the application in
 
 We have a lot to get done, and we want you to feel empowered to solve issues however you think is best and to show off your strengths! Feel free to add any libraries/dependencies/etc (you'll just want to explain your choices), with the exception of kit/component libraries such as "material-ui" or "bootstrap-react". Our home route does some good work of fetching a list of spices and blends and then having a basic details page (data not super factual), for each spice. We need to accomplish the following items:
 
-- Blend details page correctly lists the name of all included spices on first load.
-- State management between pages, so as not to re-request data.
+- DONE -- Blend details page correctly lists the name of all included spices on first load.
+- DONE -- State management between pages, so as not to re-request data.
 - Load a "blend of blends". Implement functionality to display all unique spices contained within a blend. This includes spices directly associated with the blend as well as spices found in any nested child blends. Blends may be nested to an arbitrary depth (n levels).
 - Add ability to create and view a new blend.
-- One unit test.
+- DONE -- One unit test.
 - One new "feature" or "refactor" that shows what you consider to be your FE strengths
 - One new "architecture pattern", or least be prepared to talk about one you'd like to add.
 
