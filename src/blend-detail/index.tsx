@@ -68,7 +68,7 @@ const BlendDetail = () => {
             <div className="space-y-4">
               <div className="pb-2">
                 <h2 className="font-medium text-amber-700 mb-2">
-                  All spices in this blend:
+                  All spices in this blend (including nested blends):
                 </h2>
                 {sortedSpices && sortedSpices.length > 0 ? (
                   <ul className="space-y-2">

@@ -1,20 +1,31 @@
 import { Blend, Spice } from "../types";
 import { fetchSpiceById } from "./spices";
 
+/**
+ * Fetches all blends from the API
+ * @returns A Promise resolving to an array of Blend objects
+ * @throws Error if the network request fails
+ */
 export const fetchBlends = async (): Promise<Blend[]> => {
-  const response = await fetch('/api/v1/blends');
-  if (!response.ok) {
-    throw new Error('Network response was not ok');
-  }
-  return response.json();
+    const response = await fetch('/api/v1/blends');
+    if (!response.ok) {
+        throw new Error('Network response was not ok');
+    }
+    return response.json();
 }
 
+/**
+ * Fetches a single blend by its ID from the API
+ * @param id The ID of the blend to fetch
+ * @returns A Promise resolving to a Blend object
+ * @throws Error if the network request fails
+ */
 export const fetchBlendById = async (id: number): Promise<Blend> => {
-  const response = await fetch(`/api/v1/blends/${id}`);
-  if (!response.ok) {
-    throw new Error('Network response was not ok');
-  }
-  return response.json();
+    const response = await fetch(`/api/v1/blends/${id}`);
+    if (!response.ok) {
+        throw new Error('Network response was not ok');
+    }
+    return response.json();
 }
 
 /**
@@ -25,6 +36,7 @@ export const fetchBlendById = async (id: number): Promise<Blend> => {
 export const fetchBlendSpicesRecursive = async (blendId: number): Promise<Spice[]> => {
   // Track visited blend IDs to avoid infinite loops with circular references
   const visitedBlendIds = new Set<number>();
+  
   // Use a Map to store unique spices by ID
   const spicesMap = new Map<number, Spice>();
   
