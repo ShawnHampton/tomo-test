@@ -45,13 +45,13 @@ const SpiceDetail = () => {
             <div className="space-y-4"> 
               <div className="flex pb-2">
                 <span className="font-medium w-1/3">Price:</span>
-                <span className="text-green-700 font-bold tracking-widest">${spice.price}</span>
+                <span className="text-green-700 font-bold tracking-widest bg-white w-full px-1">${spice.price}</span>
               </div>
               <div className="flex">
                 <span className="font-medium w-1/3">Heat Level:</span>
-                <div className="flex items-center">
-                  {[...Array(5)].map((_, i) => (
-                    <HeatIcon key={i} active={i < spice.heat} />
+                <div className="flex items-center  bg-white w-full px-1">
+                  {[...Array(spice.heat)].map((_, i) => (
+                    <HeatIcon key={i} active={true} />
                   ))}
                 </div>
               </div>
