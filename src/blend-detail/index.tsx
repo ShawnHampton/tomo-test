@@ -68,7 +68,7 @@ const BlendDetail = () => {
             <div className="space-y-4">
               <div className="pb-2">
                 <h2 className="font-medium text-amber-700 mb-2">
-                  All spices in this blend (including nested blends):
+                  All spices in this blend:
                 </h2>
                 {sortedSpices && sortedSpices.length > 0 ? (
                   <ul className="space-y-2">
@@ -93,23 +93,6 @@ const BlendDetail = () => {
                   </p>
                 )}
               </div>
-              
-              {blend.blends && blend.blends.length > 0 && (
-                <div>
-                  <h2 className="font-medium text-amber-700 mb-2">Other blends used:</h2>
-                  <div className="flex flex-wrap gap-2">
-                    {blend.blends.map((blendId: number) => (
-                      <Link 
-                        key={blendId}
-                        to={`/blends/${blendId}`}
-                        className="bg-amber-100 text-amber-800 px-3 py-1 rounded-full text-sm hover:bg-amber-200"
-                      >
-                        Blend #{blendId}
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-              )}
             </div>
           </div>
         ) : (

@@ -18,11 +18,11 @@ We have a lot to get done, and we want you to feel empowered to solve issues how
 
 - DONE -- Blend details page correctly lists the name of all included spices on first load.
 - DONE -- State management between pages, so as not to re-request data.
-- Load a "blend of blends". Implement functionality to display all unique spices contained within a blend. This includes spices directly associated with the blend as well as spices found in any nested child blends. Blends may be nested to an arbitrary depth (n levels).
+- DONE -- Load a "blend of blends". Implement functionality to display all unique spices contained within a blend. This includes spices directly associated with the blend as well as spices found in any nested child blends. Blends may be nested to an arbitrary depth (n levels).
 - Add ability to create and view a new blend.
 - DONE -- One unit test.
-- One new "feature" or "refactor" that shows what you consider to be your FE strengths
-- One new "architecture pattern", or least be prepared to talk about one you'd like to add.
+- DONE -- One new "feature" or "refactor" that shows what you consider to be your FE strengths
+- DONE -- One new "architecture pattern", or least be prepared to talk about one you'd like to add.
 
 ## Technical Background
 
