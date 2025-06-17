@@ -1,8 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import type { Spice } from '../types';
 import { Header } from '../components/Header';
 import { HeatIcon } from '../components/HeatIcon';
+import tinycolor from 'tinycolor2';
+import clsx from "clsx"; 
 
 const SpiceDetail = () => {
   const { id } = useParams();
@@ -11,7 +13,7 @@ const SpiceDetail = () => {
 
   useEffect(() => {
     async function fetchSpice() {
-      setLoading(true);
+      setLoading(true)
       try {
         const response = await fetch(`/api/v1/spices/${id}`);
         const spice = await response.json();
@@ -25,6 +27,10 @@ const SpiceDetail = () => {
 
     fetchSpice();
   }, [id]);
+
+  const color = useMemo(() => {
+    return tinycolor(spice?.color || '#000000');
+  }, [spice?.color])
 
   return (
     <div className="flex flex-col h-full">
@@ -40,28 +46,21 @@ const SpiceDetail = () => {
         
         {loading ? (
           <div className="flex justify-center items-center h-32">
-            <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-amber-700"></div>
+            <div className="animate-spin rounded-full h-10 w-10 border-b-2"></div>
           </div>
         ) : spice ? (
-          <div className="bg-white rounded-lg shadow-md p-6 max-w-xl mx-auto">
-            <h1 className="text-2xl font-bold text-amber-800 mb-4">{spice.name}</h1>
+          <div className={clsx("bg-white rounded-lg shadow-md p-6 max-w-xl mx-auto", {"text-gray-800": color.isLight(), "text-gray-200": color.isDark()})} style={{backgroundColor: `#${spice.color}` }}>
+            <h1 className="text-2xl font-bold mb-4" title={`#${spice.color}`}>{spice.name}</h1>
             
             <div className="space-y-4">
-              <div className="flex border-b pb-2">
-                <span className="font-medium text-gray-700 w-1/3">Color:</span>
-                <div className="flex items-center">
-                  <div className="h-6 w-6 rounded-full mr-2" style={{ backgroundColor: spice.color }}></div>
-                  <span>{spice.color}</span>
-                </div>
-              </div>
               
-              <div className="flex border-b pb-2">
-                <span className="font-medium text-gray-700 w-1/3">Price:</span>
-                <span className="text-green-700">${spice.price}</span>
+              <div className="flex pb-2">
+                <span className="font-medium w-1/3">Price:</span>
+                <span className="text-green-700 font-bold tracking-widest">${spice.price}</span>
               </div>
               
               <div className="flex">
-                <span className="font-medium text-gray-700 w-1/3">Heat Level:</span>
+                <span className="font-medium w-1/3">Heat Level:</span>
                 <div className="flex items-center">
                   {[...Array(5)].map((_, i) => (
                     <HeatIcon key={i} active={i < spice.heat} />
