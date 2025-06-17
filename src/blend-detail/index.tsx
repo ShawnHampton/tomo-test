@@ -31,7 +31,7 @@ const BlendDetail = () => {
     enabled: !!id, // Only run when blend ID is available
   });
 
-  const isLoading = isBlendLoading || isSpicesLoading;
+  const isPending = isBlendLoading || isSpicesLoading;
   const isError = isBlendError || isSpicesError;
 
   const sortedSpices = useMemo(() => {
@@ -40,6 +40,31 @@ const BlendDetail = () => {
     return allSpices.sort((a: Spice, b: Spice) => a.name.localeCompare(b.name));
   }, [allSpices]);
 
+  if (isPending) {
+    return (
+      <div className="flex flex-col h-full">
+        <Header header="Blend Details" />
+        <div className="flex justify-center items-center h-full">
+          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-amber-700"></div>
+        </div>
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="flex flex-col h-full">
+        <Header header="Blend Details" />
+        <div className="flex-1 flex items-center justify-center">
+          <div className="text-red-500 text-center">
+            Error loading blend. Please try again later.
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Only render the main content when we have data
   return (
     <div className="flex flex-col h-full">
       <Header header="Blend Details" />
@@ -53,15 +78,7 @@ const BlendDetail = () => {
           Back to Blend List
         </Link>
 
-        {isLoading ? (
-          <div className="flex justify-center items-center h-32">
-            <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-amber-700"></div>
-          </div>
-        ) : isError ? (
-          <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-center text-red-700">
-            Error loading blend. Please try again later.
-          </div>
-        ) : blend ? (
+        {blend ? (
           <div className="bg-white rounded-lg shadow-md p-6 max-w-xl mx-auto">
             <h1 className="text-2xl font-bold mb-4 text-amber-800">
               {blend.name}
@@ -78,7 +95,7 @@ const BlendDetail = () => {
                 <h2 className="font-medium text-amber-700 mb-2">
                   All spices in this blend (including nested blends):
                 </h2>
-                {allSpices && allSpices.length > 0 ? (
+                {sortedSpices && sortedSpices.length > 0 ? (
                   <ul className="space-y-2">
                     {sortedSpices.map((spice: Spice) => (
                       <li key={spice.id} className="flex items-center">

@@ -11,15 +11,41 @@ import clsx from "clsx";
 const SpiceDetail = () => {
   const { id } = useParams();
   
-  const { data: spice, isLoading, isError } = useQuery({
+  const { data: spice, isLoading: isPending, isError } = useQuery({
     queryKey: ['spices', id],
     queryFn: () => fetchSpiceById(Number(id)),
     enabled: !!id, // Only run query if id is available
   });
+  
   const color = useMemo(() => {
     return tinycolor(spice?.color || '#000000');
-  }, [spice?.color])
+  }, [spice?.color]);
 
+  if (isPending) {
+    return (
+      <div className="flex flex-col h-full">
+        <Header header="Spice Details" />
+        <div className="flex justify-center items-center h-full">
+          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-amber-700"></div>
+        </div>
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="flex flex-col h-full">
+        <Header header="Spice Details" />
+        <div className="flex-1 flex items-center justify-center">
+          <div className="text-red-500 text-center">
+            Error loading spice. Please try again later.
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Main content render when data is available
   return (
     <div className="flex flex-col h-full">
       <Header header="Spice Details" />
@@ -30,15 +56,7 @@ const SpiceDetail = () => {
           Back to Spice List
         </Link>
         
-        {isLoading ? (
-          <div className="flex justify-center items-center h-32">
-            <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-amber-700"></div>
-          </div>
-        ) : isError ? (
-          <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-center text-red-700">
-            Error loading spice. Please try again later.
-          </div>
-        ) : spice ? (
+        {spice ? (
           <div className={clsx("bg-white rounded-lg shadow-md p-6 max-w-xl mx-auto", {"text-gray-800": color.isLight(), "text-gray-200": color.isDark()})} style={{backgroundColor: `#${spice.color}` }}>
             <h1 className="text-2xl font-bold mb-4" title={`#${spice.color}`}>{spice.name}</h1>
             
@@ -49,7 +67,7 @@ const SpiceDetail = () => {
               </div>
               <div className="flex">
                 <span className="font-medium w-1/3">Heat Level:</span>
-                <div className="flex items-center  bg-white w-full px-1">
+                <div className="flex items-center bg-white w-full px-1">
                   {[...Array(spice.heat)].map((_, i) => (
                     <HeatIcon key={i} active={true} />
                   ))}
