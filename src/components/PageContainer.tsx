@@ -12,9 +12,6 @@ interface PageContainerProps {
   children?: React.ReactNode;
 }
 
-/**
- * A reusable page container component with built-in loading and error states
- */
 export const PageContainer: React.FC<PageContainerProps> = ({ 
   title, 
   isLoading = false, 

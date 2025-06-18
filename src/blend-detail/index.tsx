@@ -9,7 +9,6 @@ import type { Spice } from '../types';
 const BlendDetail = () => {
   const { id } = useParams();
 
-  // Fetch blend details
   const {
     data: blend,
     isLoading: isBlendLoading,
@@ -28,7 +27,7 @@ const BlendDetail = () => {
   } = useQuery({
     queryKey: ['blend-all-spices', id],
     queryFn: () => fetchBlendSpicesRecursive(Number(id)),
-    enabled: !!id, // Only run when blend ID is available
+    enabled: !!id,
   });
 
   const isPending = isBlendLoading || isSpicesLoading;

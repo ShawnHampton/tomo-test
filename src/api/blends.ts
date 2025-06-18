@@ -34,7 +34,7 @@ export const fetchBlendById = async (id: number): Promise<Blend> => {
  * @returns A Promise resolving to the created blend or success response
  * @throws Error if the network request fails
  */
-export const createBlend = async (blend: Pick<Blend, 'name' | 'spices' | 'blends' | 'description'>): Promise<{success: boolean}> => {
+export const createBlend = async (blend: Omit<Blend, "id">): Promise<{success: boolean}> => {
     const response = await fetch('/api/v1/blends', {
         method: 'POST',
         headers: {
