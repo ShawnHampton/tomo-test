@@ -5,6 +5,7 @@ import './main.css';
 import Home from './home/index.tsx';
 import SpiceDetail from './spice-detail/index.tsx';
 import BlendDetail from './blend-detail/index.tsx';
+import CreateBlend from './create-blend/index.tsx';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 async function enableMocking() {
@@ -23,10 +24,13 @@ const router = createBrowserRouter(
     {
       path: '/spices/:id',
       element: <SpiceDetail />,
-    },
-    {
+    },    {
       path: '/blends/:id',
       element: <BlendDetail />,
+    },
+    {
+      path: '/create-blend',
+      element: <CreateBlend />,
     },
   ],
   {
