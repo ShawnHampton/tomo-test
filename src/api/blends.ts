@@ -29,6 +29,28 @@ export const fetchBlendById = async (id: number): Promise<Blend> => {
 }
 
 /**
+ * Creates a new blend
+ * @param blend The blend data to create
+ * @returns A Promise resolving to the created blend or success response
+ * @throws Error if the network request fails
+ */
+export const createBlend = async (blend: Pick<Blend, 'name' | 'spices' | 'blends' | 'description'>): Promise<{success: boolean}> => {
+    const response = await fetch('/api/v1/blends', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(blend),
+    });
+    
+    if (!response.ok) {
+        throw new Error('Failed to create blend');
+    }
+    
+    return response.json();
+};
+
+/**
  * Recursively fetches a blend and all its sub-blends, and returns a list of unique spices
  * @param blendId The ID of the blend to start with
  * @returns A Promise resolving to an array of unique Spice objects
